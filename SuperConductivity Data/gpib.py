@@ -4,7 +4,7 @@ import serial
 class PrologixGPIB(object):
 	def __init__(self, devpath):
 		self.gpib = serial.Serial(devpath, baudrate=115200)
-		self.gpib.timeout = 1
+		self.gpib.timeout = 10
 
 		# Query version to make sure it is live
 		self.gpib.write(b'++ver\n')
@@ -13,7 +13,7 @@ class PrologixGPIB(object):
 		if not resp.startswith(b'Prologix'):
 			raise RuntimeError('Cannot communicate with GPIB adapter at ' + devpath)
 
-		self('mode 1')
+		self('++mode 1')
 
 	def __call__(self, command, response=False):
 		self.gpib.write((command + '\n').encode('us-ascii'))
